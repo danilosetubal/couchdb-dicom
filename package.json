@@ -1,0 +1,17 @@
+{
+  "name": "dicom-couchdb",
+  "version": "1.0.0",
+  "description": "Script para conversão de arquivos DCM (DICOM) para JSON para armazagem em um BD CouchDB",
+  "main": "converterExample.js",
+  "scripts": {
+    "run": "node src/index.js",
+    "test": "node test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dicom-parser": "^1.8.5",
+    "nano": "^8.2.2",
+    "rusha": "^0.8.13"
+  }
+}
