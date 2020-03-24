@@ -1,35 +1,14 @@
 const fs = require('fs');
-const path = require('path');
 const dicomParser = require('dicom-parser');
-const dictionary = require('./dicomDictionary');
+const globby = require('globby');
+const dictionary = require('../dicomDictionary');
 
-const getFilePaths = function(dir, done) {
-    let results = [];
-    fs.readdir(dir, function(err, list) {
-        if (err) return done(err);
-        let i = 0;
-        (function next() {
-            let file = list[i++];
-            if (!file) return done(null, results);
-            file = path.resolve(dir, file);
-            fs.stat(file, function(err, stat) {
-                if (stat && stat.isDirectory()) {
-                    getFilePaths(file, function(err, res) {
-                        results = results.concat(res);
-                        next();
-                    });
-                } else {
-                    results.push(file);
-                    next();
-                }
-            });
-        })();
-    });
-};
+const getFilesPaths = dir => globby(`${dir}/**/*.dcm`);
 
 const getDicomJsonFiles = filePaths => {
     const files = [];
-    filePaths.forEach(filePath => {
+    filePaths.forEach((filePath, index) => {
+        console.log('Gerando JSON do arquivo:', index + 1, filePath);
         var dicomFileAsBuffer = fs.readFileSync(filePath);
 
         try {
@@ -51,7 +30,7 @@ const getDicomJsonFiles = filePaths => {
         } catch (e) {
             console.error(e);
         }
-    })
+    });
     return files;
 };
 
@@ -68,6 +47,6 @@ const getFieldFromDictionary = tag => {
 };
 
 module.exports = {
-    getFilePaths,
-    getDicomJsonFiles
+    getFilesPaths,
+    getDicomJsonFiles,
 };

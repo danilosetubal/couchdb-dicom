@@ -4,13 +4,15 @@
   "description": "Script para conversão de arquivos DCM (DICOM) para JSON para armazagem em um BD CouchDB",
   "main": "converterExample.js",
   "scripts": {
-    "run": "node src/index.js",
-    "test": "node test.js"
+    "dicom:migrate": "node src/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "dicom-parser": "^1.8.5",
+    "fast-glob": "^3.2.2",
+    "globby": "^11.0.0",
     "nano": "^8.2.2",
     "rusha": "^0.8.13"
   }

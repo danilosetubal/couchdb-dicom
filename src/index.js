@@ -1,30 +1,22 @@
 const path = require('path');
-const { getFilePaths, getDicomJsonFiles } = require('./utils');
-const nano = require('nano')('http://admin:admin@localhost:5984');
-
-
+const { getFilesPaths, getDicomJsonFiles } = require('./utils/dicom');
+const { verifyDatabase, insertDocuments, createDataBase } = require('./utils/repository');
 const rootDirectoryPath = path.join(__dirname, '/datasets/dicomFiles');
 
-(() => {
-    getFilePaths(rootDirectoryPath, (err, filePaths) => {
-        if (err) console.log(err);
-        const jsonFiles = getDicomJsonFiles(filePaths);
+const databaseName = 'dicom_db';
+const rootDatabasePath = 'http://localhost:5984/' + databaseName;
+const postBulkPath = rootDatabasePath + '/_bulk_docs';
+const configRequest = {auth: {username: 'admin', password: 'admin'}};
 
-        nano.db.get('exames', function(err, body) {
-            if (err && err.reason === 'Database does not exist.') {
-                nano.db.create('exames', (err, body) => {
-                    console.log('Database created!');
-                });
-            } else {
-                const exames = nano.use('exames');
+(async () => {
+    const filesPaths = await getFilesPaths(rootDirectoryPath);
+    const jsonFiles = getDicomJsonFiles(filesPaths);
+    const baseExists = await verifyDatabase(rootDatabasePath, configRequest);
 
-                exames.bulk(jsonFiles, (err, body) => {
-                    console.log(body)
-                })
-            }
-        });
-
-
-    });
-
+    if (baseExists) {
+        await insertDocuments(postBulkPath, jsonFiles, configRequest);
+    } else {
+        await createDataBase(rootDatabasePath, configRequest);
+        await insertDocuments(postBulkPath, jsonFiles, configRequest);
+    }
 })();
