@@ -6,7 +6,7 @@
   "scripts": {
     "dicom:migrate": "node src/index.js"
   },
-  "author": "",
+  "author": "Danilo Setúbal",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
