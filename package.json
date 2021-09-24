@@ -9,7 +9,7 @@
   "author": "Danilo Setúbal",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "dicom-parser": "^1.8.5",
     "fast-glob": "^3.2.2",
     "globby": "^11.0.0",
